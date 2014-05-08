@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="css/normalize.css" type="text/css" />
+  <link rel="stylesheet" href="css/main.css" type="text/css" />
+  <script src="js/jquery-1.11.0.min.js"></script>
+  <script src="js/handlebars-v1.3.0.js"></script>
+  <script src="js/global.js"></script>
+  <title>InstaSL.se</title>
+</head>
+<body>
+  <h2>Position</h2>
+  <p class="latitude">Latitude: </p>
+  <p class="longitude">Longitude: </p>
+  <script id="tpl-locations" type="text/x-handlebars-template">
+    <h2>Närliggande hållplatser</h2>
+    <ul class="locations">
+    {{#each locations}}
+     <li>
+       <a href="#" class="link" data-name="{{name}}">{{name}}</a>
+     </li>
+    {{/each}}
+    </ul>
+    <h2>Testhållplatser:</h2>
+    <ul class="locations">
+      <li>
+      <a href="#" class="link" data-name="Liljeholmen">Liljeholmen</a>
+      </li>
+      <li>
+      <a href="#" class="link" data-name="T-centralen">T-centralen</a>
+      </li>
+    </ul>
+  </script>
+  <script id="tpl-departures" type="text/x-handlebars-template">
+
+    {{#if departures.Buses}}
+    <h2>Buss</h2>
+    <ul class="buses">
+    {{#each departures.Buses}}
+      <li>
+          <span>{{LineNumber}}</span>
+          <span>{{Destination}}</span>
+          <span class="displayTime">{{DisplayTime}}</span>
+        </a>
+      </li>
+    {{/each}}
+    </ul>
+    {{/if}}
+
+    {{#if departures.Metros}}
+    <h2>T-bana</h2>
+    <ul class="metros">
+    {{#each departures.Metros}}
+      <span>{{GroupOfLine}}</span>
+          {{#each DepartureInfos}}
+          <li>
+            <span>{{LineNumber}}</span>
+            <span>{{Destination}}</span>
+            <span class="displayTime">{{DisplayTime}}</span>
+          </li>
+          {{/each}}
+    {{/each}}
+    </ul>
+    {{/if}}
+
+  </script>
+</body>
+</html>

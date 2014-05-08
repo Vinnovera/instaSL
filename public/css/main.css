@@ -1,0 +1,25 @@
+body {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+h2 {
+  font-size: 14px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+ul li {
+  margin: 10px;
+}
+
+.metros > span {
+  display: block;
+}
+
+
+
