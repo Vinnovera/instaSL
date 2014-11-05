@@ -5,15 +5,30 @@ var app = express();
 app.get('/getStations', function(req, res){
   console.log(req.query);
   var client = restify.createClient({
-    url: 'https://api.trafiklab.se'
+    url: 'http://sl.se'
   });
 
-  var apiKey = 'LZXeu5VNy0YBTv7q8NrGTLHLtCYDM83s',
+/*  var
       longitude = req.query.longitude,
-      latitude = req.query.latitude,
-      radius = '500';
+      latitude = req.query.latitude;*/
 
-  client.get('/samtrafiken/resrobot/StationsInZone.json?apiVersion=2.1&centerX=' + longitude + '&centerY=' + latitude + '&radius=' + radius + '&coordSys=WGS84&key=' + apiKey, function(err, req) {
+
+  /* Spoof Liljeholmen */
+/*  var
+      longitude = 18.024284,
+      latitude = 59.310549;*/
+
+    /* Spoof T-centralen */
+/*    var
+      longitude = 18.059467,
+      latitude = 59.331967;*/
+
+    /* Spoof Slussen */
+     var
+        longitude = 18.072896,
+        latitude = 59.321324;
+
+  client.get('http://sl.se/api/Map/FindStationByGeoLocation/' + latitude + '/' + longitude + '/10/false', function(err, req) {
     req.on('result', function(err, result) {
       result.body = '';
       result.setEncoding('utf8');
@@ -30,42 +45,16 @@ app.get('/getStations', function(req, res){
   });
 });
 
-app.get('/getSiteID', function(req, res){
-  console.log(req.query);
-  var client = restify.createClient({
-    url: 'https://api.trafiklab.se'
-  });
-
-  var apiKey = 'EugaETfMxy7JK3T6jF0sTnykdXgjyxs3',
-      stationName = req.query.stationName;
-
-  client.get('/sl/realtid/GetSite.json?stationSearch=' + stationName +  '&key=' + apiKey, function(err, req) {
-    req.on('result', function(err, result) {
-      result.body = '';
-      result.setEncoding('utf8');
-      result.on('data', function(chunk) {
-        result.body += chunk;
-      });
-
-      result.on('end', function() {
-        res.setHeader('Content-Type', 'text/json');
-        res.setHeader('Content-Length', Buffer.byteLength(result.body));
-        res.end(result.body);
-      });
-    });
-  });
-});
 
 app.get('/getDepartures', function(req, res){
   console.log(req.query);
   var client = restify.createClient({
-    url: 'https://api.trafiklab.se'
+    url: 'http://sl.se'
   });
 
-  var apiKey = 'LWvXyziJkylToRTrlj7nA9YQgx8ZOuSH',
-      siteID = req.query.siteID;
+  var siteID = req.query.siteID;
 
-  client.get('/sl/realtid2/GetAllDepartureTypes.json/' + siteID +'/30?key=' + apiKey, function(err, req) {
+  client.get('http://sl.se/api/RealTime/GetDepartures/' + siteID, function(err, req) {
     req.on('result', function(err, result) {
       result.body = '';
       result.setEncoding('utf8');

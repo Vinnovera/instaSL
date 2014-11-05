@@ -5,66 +5,255 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
   <link rel="stylesheet" href="css/normalize.css" type="text/css" />
   <link rel="stylesheet" href="css/main.css" type="text/css" />
+  <link href='http://fonts.googleapis.com/css?family=Cabin+Sketch' rel='stylesheet' type='text/css'>
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="js/handlebars-v1.3.0.js"></script>
   <script src="js/global.js"></script>
   <title>InstaSL.se</title>
 </head>
 <body>
-  <h2>Position</h2>
-  <p class="latitude">Latitude: </p>
-  <p class="longitude">Longitude: </p>
-  <script id="tpl-locations" type="text/x-handlebars-template">
-    <h2>Närliggande hållplatser</h2>
-    <ul class="locations">
-    {{#each locations}}
-     <li>
-       <a href="#" class="link" data-name="{{name}}">{{name}}</a>
-     </li>
-    {{/each}}
-    </ul>
-    <h2>Testhållplatser:</h2>
-    <ul class="locations">
-      <li>
-      <a href="#" class="link" data-name="Liljeholmen">Liljeholmen</a>
-      </li>
-      <li>
-      <a href="#" class="link" data-name="T-centralen">T-centralen</a>
-      </li>
-    </ul>
-  </script>
-  <script id="tpl-departures" type="text/x-handlebars-template">
 
-    {{#if departures.Buses}}
-    <h2>Buss</h2>
-    <ul class="buses">
-    {{#each departures.Buses}}
-      <li>
-          <span>{{LineNumber}}</span>
-          <span>{{Destination}}</span>
-          <span class="displayTime">{{DisplayTime}}</span>
-        </a>
-      </li>
-    {{/each}}
-    </ul>
+  <h1>instaSL.se</h1>
+  <div class="wrapper">
+    <section class="page locations">
+      <script id="tpl-locations" type="text/x-handlebars-template">
+        <h2>Närliggande hållplatser</h2>
+        <ul class="locations">
+        {{#each locations}}
+         <li>
+           <a href="#{{Name}}?stationsID={{Id}}" class="link-button" data-siteID="{{Id}}">
+             {{Name}}
+             <span>{{Distance}} m</span>
+
+             <div class="transport-types">
+               {{#each TrafficTypeList}}
+               <span class="transport-icon {{this}}"></span>
+               {{/each}}
+             </div>
+
+           </a>
+         </li>
+        {{/each}}
+        </ul>
+
+
+      </script>
+    </section>
+
+    <section class="page departures">
+      <h2></h2>
+      <div class="template-wrapper"></div>
+    </section>
+
+  </div>
+
+  <script id="tpl-departures" type="text/x-handlebars-template">
+  <ul class="tabs">
+    {{#if departures.BusGroups}}
+    <li><a href="#" id="tab-busses"><span class="transport-icon">B</span></a></li>
+    {{/if}}
+    {{#if departures.MetroBlueGroups}}
+    <li><a href="#" id="tab-metro-blue-line"><span class="transport-icon metro-blue-line">T</span></a></li>
+    {{/if}}
+    {{#if departures.MetroGreenGroups}}
+    <li><a href="#" id="tab-metro-green-line"><span class="transport-icon metro-green-line">T</span></a></li>
+    {{/if}}
+    {{#if departures.MetroRedGroups}}
+    <li><a href="#" id="tab-metro-red-line"><span class="transport-icon metro-red-line">T</span></a></li>
+    {{/if}}
+    {{#if departures.TrainGroups}}
+    <li><a href="#" id="tab-trains"><span class="transport-icon">J</span></a></li>
+    {{/if}}
+    {{#if departures.TramTypes}}
+    <li><a href="#" id="tab-trams"><span class="transport-icon">L</span></a></li>
+    {{/if}}
+    {{#if departures.TramCityTypes}}
+    <li><a href="#" id="tab-city-trams"><span class="transport-icon">S</span></a></li>
+    {{/if}}
+  </ul>
+  <ul class="tabs-content">
+
+    {{#if departures.BusGroups}}
+    <li class="active" id="tab-content-busses">
+      {{#each departures.BusGroups}}
+      <ul class="group">
+        {{#each this}}
+        <li>
+          <a class="link-button">
+            <span class="line-number">{{this.0.LineNumber}}</span>
+            <span class="destination">{{this.0.Destination}}</span>
+            <span class="display-time">{{this.0.DisplayTime}}</span>
+          </a>
+
+          <ul>
+            {{#each this}}
+            <li>
+              <span class="line-number">{{LineNumber}}</span>
+              <span class="destination">{{Destination}}</span>
+              <span class="display-time">{{DisplayTime}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
+      {{/each}}
+    </li>
     {{/if}}
 
-    {{#if departures.Metros}}
-    <h2>T-bana</h2>
-    <ul class="metros">
-    {{#each departures.Metros}}
-      <span>{{GroupOfLine}}</span>
-          {{#each DepartureInfos}}
+    {{#if departures.MetroBlueGroups}}
+    <li id="tab-content-metro-blue-line">
+      {{#each departures.MetroBlueGroups}}
+      <ul class="group">
+        {{#each this}}
+        <li>
+          <a class="link-button">
+            <span class="line-number">{{this.0.LineNumber}}</span>
+            <span class="destination">{{this.0.Destination}}</span>
+            <span class="display-time">{{this.0.DisplayTime}}</span>
+          </a>
+
+          <ul>
+            {{#each this}}
+            <li>
+              <span class="line-number">{{LineNumber}}</span>
+              <span class="destination">{{Destination}}</span>
+              <span class="display-time">{{DisplayTime}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
+      {{/each}}
+    </li>
+    {{/if}}
+
+    {{#if departures.MetroGreenGroups}}
+    <li id="tab-content-metro-green-line">
+      {{#each departures.MetroGreenGroups}}
+      <ul class="group">
+        {{#each this}}
+        <li>
+          <a class="link-button">
+            <span class="line-number">{{this.0.LineNumber}}</span>
+            <span class="destination">{{this.0.Destination}}</span>
+            <span class="display-time">{{this.0.DisplayTime}}</span>
+          </a>
+
+          <ul>
+            {{#each this}}
+            <li>
+              <span class="line-number">{{LineNumber}}</span>
+              <span class="destination">{{Destination}}</span>
+              <span class="display-time">{{DisplayTime}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
+    {{/each}}
+  </li>
+  {{/if}}
+
+    {{#if departures.MetroRedGroups}}
+    <li id="tab-content-metro-red-line">
+      {{#each departures.MetroRedGroups}}
+      <ul class="group">
+        {{#each this}}
+        <li>
+          <a class="link-button">
+            <span class="line-number">{{this.0.LineNumber}}</span>
+            <span class="destination">{{this.0.Destination}}</span>
+            <span class="display-time">{{this.0.DisplayTime}}</span>
+          </a>
+
+          <ul>
+            {{#each this}}
+            <li>
+              <span class="line-number">{{LineNumber}}</span>
+              <span class="destination">{{Destination}}</span>
+              <span class="display-time">{{DisplayTime}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
+    {{/each}}
+  </li>
+  {{/if}}
+
+
+    {{#if departures.TrainGroups}}
+    <li id="tab-content-trains">
+      {{#each departures.TrainGroups}}
+      <ul class="group">
+        {{#each this}}
+        <li>
+          <a class="link-button">
+            <span class="line-number">{{this.0.LineNumber}}</span>
+            <span class="destination">{{this.0.Destination}}</span>
+            <span class="display-time">{{this.0.DisplayTime}}</span>
+          </a>
+
+          <ul>
+            {{#each this}}
+            <li>
+              <span class="line-number">{{LineNumber}}</span>
+              <span class="destination">{{Destination}}</span>
+              <span class="display-time">{{DisplayTime}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </li>
+        {{/each}}
+      </ul>
+      {{/each}}
+    </li>
+    {{/if}}
+
+    {{#if departures.TramTypes}}
+    <li id="tab-content-trams">
+      {{#each departures.TramTypes}}
+        {{#each TramGroups}}
+        <ul class="group">
+          {{#each this}}
           <li>
-            <span>{{LineNumber}}</span>
-            <span>{{Destination}}</span>
-            <span class="displayTime">{{DisplayTime}}</span>
+            <a class="link-button">
+              <span class="line-number">{{this.0.LineNumber}}</span>
+              <span class="destination">{{this.0.Destination}}</span>
+              <span class="display-time">{{this.0.DisplayTime}}</span>
+            </a>
+
+            <ul>
+              {{#each this}}
+              <li>
+                <span class="line-number">{{LineNumber}}</span>
+                <span class="destination">{{Destination}}</span>
+                <span class="display-time">{{DisplayTime}}</span>
+              </li>
+              {{/each}}
+            </ul>
           </li>
           {{/each}}
-    {{/each}}
-    </ul>
+        </ul>
+        {{/each}}
+      {{/each}}
+    </li>
     {{/if}}
 
+    <li class="back">
+      <a href="#" class="link-button back">Tillbaka till närliggande hållplatser</a>
+    </li>
+  </ul>
+
+
+
+
   </script>
+
+  <footer></footer>
 </body>
 </html>
